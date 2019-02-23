@@ -2,6 +2,7 @@ package dal;
 
 import dto.UserDTO;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public interface IUserDAO {
