@@ -10,6 +10,8 @@ import java.util.List;
 
 public class UserDAOImpls185099 implements IUserDAO {
 
+    //Jeg var ikke sikker på hvad felterne 'ini' og 'roles' skulle repræsentere, så i min database er 'ini vores måde at hilse på, og 'roles' vores initialer.
+
     Connection connection;
     Statement statement;
 
@@ -24,7 +26,7 @@ public class UserDAOImpls185099 implements IUserDAO {
         }
     }
 
-    //TODO Make a connection to the database
+
     private Connection createConnection() throws DALException {
         try {
             return DriverManager.getConnection("jdbc:mysql://ec2-52-30-211-3.eu-west-1.compute.amazonaws.com/s185099?" + "user=s185099&password=zhKW0aeedrH5Jvd9UDGJp");
@@ -35,10 +37,8 @@ public class UserDAOImpls185099 implements IUserDAO {
 
     @Override
     public UserDTO getUser(int userId) throws DALException {
-        //TODO Implement this
         UserDTO user = new UserDTO();
         try{
-            //statement.executeQuery("SELECT * FROM databaser1 WHERE userID = "+userId);
             ResultSet resultSet = statement.executeQuery("SELECT * FROM databaser1 WHERE userID =" + userId);
             System.out.println("Got resultset from database:");
 
@@ -52,7 +52,6 @@ public class UserDAOImpls185099 implements IUserDAO {
 
         connection.close();
 
-        //TODO: Make a user from the resultset
         return user;}catch (SQLException e){
             e.printStackTrace();
         }
@@ -63,7 +62,6 @@ public class UserDAOImpls185099 implements IUserDAO {
 
     @Override
     public List<UserDTO> getUserList() throws DALException {
-        //TODO Implement this
         ArrayList<UserDTO> users = new ArrayList<>();
         try {
             ResultSet resultSet = statement.executeQuery("SELECT * FROM databaser1");
@@ -83,7 +81,6 @@ public class UserDAOImpls185099 implements IUserDAO {
 
     @Override
     public void createUser(UserDTO user) throws DALException {
-        //TODO Implement this
         try {
             String create = "INSERT INTO databaser1 (userID, username, ini, roles) VALUES (" + user.getUserId() + ",'" + user.getUserName() + "','" + user.getIni() + "','" + user.getRoles() + "')";
             statement.executeUpdate(create);
@@ -95,7 +92,6 @@ public class UserDAOImpls185099 implements IUserDAO {
 
     @Override
     public void updateUser(UserDTO user) throws DALException {
-        //TODO Implement this
         try{
             String update = "UPDATE databaser1 SET userID ="+user.getUserId()+", username='"+user.getUserName()+"', ini ='"+user.getIni()+"', roles='"+user.getRoles()+"'  WHERE userID = "+user.getUserId();
             statement.executeUpdate(update);
@@ -107,7 +103,6 @@ public class UserDAOImpls185099 implements IUserDAO {
 
     @Override
     public void deleteUser(int userId) throws DALException {
-        //TODO Implement this
         try{
             String delete = "DELETE FROM databaser1 WHERE userID ="+userId;
             statement.executeUpdate(delete);
