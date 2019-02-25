@@ -10,7 +10,7 @@ import java.util.List;
 
 public class UserDAOImpls185099 implements IUserDAO {
 
-    //Jeg var ikke sikker på hvad felterne 'ini' og 'roles' skulle repræsentere, så i min database er 'ini vores måde at hilse på, og 'roles' vores initialer.
+    //Jeg var ikke sikker på hvad felterne 'ini' og 'roles' skulle repræsentere, og 'roles' er defineret som en string, da jeg ikke vidste hvordan jeg skulle definere den som en List i databasen.
 
     Connection connection;
     Statement statement;
