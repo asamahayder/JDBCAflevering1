@@ -73,6 +73,8 @@ public class UserDAOImpls185099 implements IUserDAO {
                 user.setRoles(Collections.singletonList(resultSet.getString(4)));
                 users.add(user);
             }
+
+            connection.close();
         }catch (SQLException e){
             e.printStackTrace();
         }
@@ -85,6 +87,8 @@ public class UserDAOImpls185099 implements IUserDAO {
             String create = "INSERT INTO databaser1 (userID, username, ini, roles) VALUES (" + user.getUserId() + ",'" + user.getUserName() + "','" + user.getIni() + "','" + user.getRoles() + "')";
             statement.executeUpdate(create);
 
+            connection.close();
+
         }catch (SQLException e){
             e.printStackTrace();
         }
@@ -96,6 +100,8 @@ public class UserDAOImpls185099 implements IUserDAO {
             String update = "UPDATE databaser1 SET userID ="+user.getUserId()+", username='"+user.getUserName()+"', ini ='"+user.getIni()+"', roles='"+user.getRoles()+"'  WHERE userID = "+user.getUserId();
             statement.executeUpdate(update);
 
+            connection.close();
+
         }catch (SQLException e){
             e.printStackTrace();
         }
@@ -106,6 +112,8 @@ public class UserDAOImpls185099 implements IUserDAO {
         try{
             String delete = "DELETE FROM databaser1 WHERE userID ="+userId;
             statement.executeUpdate(delete);
+
+            connection.close();
 
         }
         catch (SQLException e){
