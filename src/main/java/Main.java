@@ -5,6 +5,7 @@ import dto.UserDTO;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -32,18 +33,32 @@ public class Main {
         }*/
 
        UserDTO user = new UserDTO();
-       user.setRoles(Collections.singletonList("CD"));
-       user.setIni("Sker der drenge");
-       user.setUserName("Christoffer detlef");
-       user.setUserId(5);
-        UserDAOImpls185099 dao = new UserDAOImpls185099();
+       ArrayList<String> roles = new ArrayList<>();
+       roles.add("Student");
+       roles.add("Araber");
+       user.setRoles(roles);
+       user.setIni("MA");
+       user.setUserName("Mohammed Abu Baker");
+       user.setUserId(6);
+       UserDAOImpls185099 dao = new UserDAOImpls185099();
+
         try {
-            dao.createUser(user);
+            List<UserDTO> userList = dao.getUserList();
+            UserDTO userFromList = userList.get(1);
+
+            System.out.println("roles: ");
+            System.out.println(" ");
+            for (int i = 0; i <userFromList.getRoles().size() ; i++) {
+                System.out.println(userFromList.getRoles().get(i));
+            }
+            System.out.println(" ");
+            System.out.println("Username: " + userFromList.getUserName());
+            System.out.println("UserId: " + userFromList.getUserId());
+            System.out.println("User initials: " + userFromList.getIni());
 
         } catch (IUserDAO.DALException e) {
             e.printStackTrace();
         }
-
 
     }
 

@@ -9,9 +9,6 @@ import java.util.Collections;
 import java.util.List;
 
 public class UserDAOImpls185099 implements IUserDAO {
-
-    //Jeg var ikke sikker på hvad felterne 'ini' og 'roles' skulle repræsentere, og 'roles' er defineret som en string, da jeg ikke vidste hvordan jeg skulle definere den som en List i databasen.
-
     Connection connection;
     Statement statement;
 
@@ -38,6 +35,7 @@ public class UserDAOImpls185099 implements IUserDAO {
     @Override
     public UserDTO getUser(int userId) throws DALException {
         UserDTO user = new UserDTO();
+        ArrayList<String> roles = new ArrayList<>();
         try{
             ResultSet resultSet = statement.executeQuery("SELECT * FROM databaser1 WHERE userID =" + userId);
             System.out.println("Got resultset from database:");
@@ -47,11 +45,14 @@ public class UserDAOImpls185099 implements IUserDAO {
                 user.setUserId(resultSet.getInt(1));
                 user.setUserName(resultSet.getString(2));
                 user.setIni(resultSet.getString(3));
-                user.setRoles(Collections.singletonList(resultSet.getString(4)));
+                String roleString = (resultSet.getString(4));
+                String[] roleArray = roleString.split(", ");
+                for (int i = 0; i <roleArray.length ; i++) {
+                    roles.add(roleArray[i]);
+                }
+                user.setRoles(roles);
             }
-
         connection.close();
-
         return user;}catch (SQLException e){
             e.printStackTrace();
         }
@@ -63,6 +64,7 @@ public class UserDAOImpls185099 implements IUserDAO {
     @Override
     public List<UserDTO> getUserList() throws DALException {
         ArrayList<UserDTO> users = new ArrayList<>();
+
         try {
             ResultSet resultSet = statement.executeQuery("SELECT * FROM databaser1");
             while (resultSet.next()){
@@ -70,7 +72,13 @@ public class UserDAOImpls185099 implements IUserDAO {
                 user.setUserId(resultSet.getInt(1));
                 user.setUserName(resultSet.getString(2));
                 user.setIni(resultSet.getString(3));
-                user.setRoles(Collections.singletonList(resultSet.getString(4)));
+                String roleString = resultSet.getString(4);
+                String[] roleArray = roleString.split(", ");
+                ArrayList<String> roles = new ArrayList<>();
+                for (int i = 0; i <roleArray.length ; i++) {
+                    roles.add(roleArray[i]);
+                }
+                user.setRoles(roles);
                 users.add(user);
             }
 
@@ -83,8 +91,17 @@ public class UserDAOImpls185099 implements IUserDAO {
 
     @Override
     public void createUser(UserDTO user) throws DALException {
+        StringBuilder rolesStringBuilder = new StringBuilder();
+        List<String> roleListFromUser = user.getRoles();
+        for (int i = 0; i < roleListFromUser.size() ; i++) {
+            rolesStringBuilder.append(roleListFromUser.get(i));
+            if (i != roleListFromUser.size() - 1) {
+                rolesStringBuilder.append(", ");
+            }
+        }
+        String roles = rolesStringBuilder.toString();
         try {
-            String create = "INSERT INTO databaser1 (userID, username, ini, roles) VALUES (" + user.getUserId() + ",'" + user.getUserName() + "','" + user.getIni() + "','" + user.getRoles() + "')";
+            String create = "INSERT INTO databaser1 (userID, username, ini, roles) VALUES (" + user.getUserId() + ",'" + user.getUserName() + "','" + user.getIni() + "','" + roles + "')";
             statement.executeUpdate(create);
 
             connection.close();
@@ -96,10 +113,18 @@ public class UserDAOImpls185099 implements IUserDAO {
 
     @Override
     public void updateUser(UserDTO user) throws DALException {
+        StringBuilder rolesStringBuilder = new StringBuilder();
+        List<String> roleListFromUser = user.getRoles();
+        for (int i = 0; i < roleListFromUser.size() ; i++) {
+            rolesStringBuilder.append(roleListFromUser.get(i));
+            if (i != roleListFromUser.size() - 1) {
+                rolesStringBuilder.append(", ");
+            }
+        }
+        String roles = rolesStringBuilder.toString();
         try{
-            String update = "UPDATE databaser1 SET userID ="+user.getUserId()+", username='"+user.getUserName()+"', ini ='"+user.getIni()+"', roles='"+user.getRoles()+"'  WHERE userID = "+user.getUserId();
+            String update = "UPDATE databaser1 SET userID ="+user.getUserId()+", username='"+user.getUserName()+"', ini ='"+user.getIni()+"', roles='"+roles+"'  WHERE userID = "+user.getUserId();
             statement.executeUpdate(update);
-
             connection.close();
 
         }catch (SQLException e){
